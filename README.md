@@ -4,18 +4,21 @@ A simple roguelike dungeon crawler game written in Rust, using [bracket-lib](htt
 
 ## Features
 
-- Procedurally generated dungeons with multiple generation algorithms
+- Procedurally generated dungeons with multiple generation algorithms (Drunkard's Walk, Rooms, Cellular Automata)
 - Turn-based gameplay
 - Monsters that chase and attack the player
 - Field of view (FOV) and fog of war
 - Item pickup and inventory system
-- Usable items (potions, etc.)
+- Usable items (potions, weapons, etc.)
 - Health and combat system
 - Win and game over states
 - Camera that follows the player
 - Keyboard controls (movement, pickup, use items, wait)
 - HUD and tooltips
-- Themed dungeon tiles
+- Themed dungeon tiles (Forest and Dungeon themes)
+- Prefab room support
+- Multiple dungeon levels, each with unique layout and theme
+- Amulet of Yala as the victory objective
 - Restart option after death or victory
 
 ## Screenshots
