@@ -54,7 +54,7 @@ pub fn hud(ecs: &SubWorld) {
         );
     }
 
-    let (player, map_level) = <(Entity, &Player)>::query()
+    let (_player, map_level) = <(Entity, &Player)>::query()
         .iter(ecs)
         .find_map(|(entity, player)| Some((*entity, player.map_level)))
         .unwrap();

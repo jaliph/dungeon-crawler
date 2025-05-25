@@ -42,13 +42,18 @@ impl State {
         let mut ecs = World::default();
         let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
+        let mut map_builder = MapBuilder::new(&mut rng, 0);
         spawn_player(&mut ecs, map_builder.player_start);
-        spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
-        map_builder
-            .monster_spawns
-            .iter()
-            .for_each(|pos| spawn_entity(&mut ecs, &mut rng, *pos));
+
+        let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
+        map_builder.map.tiles[exit_idx] = TileType::Exit;
+        spawn_level(
+            &mut ecs,
+            &mut resources,
+            &mut rng,
+            0,
+            &map_builder.monster_spawns,
+        );
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitingInput);
@@ -95,15 +100,18 @@ impl State {
         self.ecs = World::default();
         self.resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let mut map_builder = MapBuilder::new(&mut rng);
+        let mut map_builder = MapBuilder::new(&mut rng, 0);
         spawn_player(&mut self.ecs, map_builder.player_start);
         // spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
         let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
         map_builder.map.tiles[exit_idx] = TileType::Exit;
-        map_builder
-            .monster_spawns
-            .iter()
-            .for_each(|pos| spawn_entity(&mut self.ecs, &mut rng, *pos));
+        spawn_level(
+            &mut self.ecs,
+            &mut self.resources,
+            &mut rng,
+            0,
+            &map_builder.monster_spawns,
+        );
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TurnState::AwaitingInput);
@@ -141,7 +149,14 @@ impl State {
             .for_each(|fov| fov.is_dirty = true);
 
         let mut rng = RandomNumberGenerator::new();
-        let mut map_builder = MapBuilder::new(&mut rng);
+        // Get the player's current map_level
+        let player_level = <&Player>::query()
+            .iter(&self.ecs)
+            .next()
+            .map(|player| player.map_level)
+            .unwrap_or(0);
+        
+        let mut map_builder = MapBuilder::new(&mut rng, player_level + 1);
         let mut map_level = 0;
         <(&mut Player, &mut Point)>::query()
             .iter_mut(&mut self.ecs)
@@ -153,11 +168,30 @@ impl State {
             });
 
         if map_level == 2 {
+            spawn_level(
+                &mut self.ecs,
+                &mut self.resources,
+                &mut rng,
+                map_level as usize,
+                &map_builder.monster_spawns,
+            );
             spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
         } else {
             let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
             map_builder.map.tiles[exit_idx] = TileType::Exit;
+            spawn_level(
+                &mut self.ecs,
+                &mut self.resources,
+                &mut rng,
+                map_level as usize,
+                &map_builder.monster_spawns,
+            );
         }
+
+        self.resources.insert(map_builder.map);
+        self.resources.insert(Camera::new(map_builder.player_start));
+        self.resources.insert(TurnState::AwaitingInput);
+        self.resources.insert(map_builder.theme);
     }
 
     fn victory(&mut self, ctx: &mut BTerm) {

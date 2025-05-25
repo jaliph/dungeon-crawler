@@ -7,3 +7,5 @@ authors = ["Akash Chandra"]
 [dependencies]
 bracket-lib = "0.8.7"
 legion = "0.4.0"
+ron = "0.10.1"
+serde = "1.0.219"
