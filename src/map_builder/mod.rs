@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 mod empty;
-use empty::EmptyArchitect;
+// use empty::EmptyArchitect;
 mod rooms;
 use rooms::RoomsArchitect;
 mod automata;
