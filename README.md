@@ -4,10 +4,19 @@ A simple roguelike dungeon crawler game written in Rust, using [bracket-lib](htt
 
 ## Features
 
-- Procedurally generated dungeons
+- Procedurally generated dungeons with multiple generation algorithms
 - Turn-based gameplay
-- Monsters that chase the player
+- Monsters that chase and attack the player
+- Field of view (FOV) and fog of war
+- Item pickup and inventory system
+- Usable items (potions, etc.)
+- Health and combat system
 - Win and game over states
+- Camera that follows the player
+- Keyboard controls (movement, pickup, use items, wait)
+- HUD and tooltips
+- Themed dungeon tiles
+- Restart option after death or victory
 
 ## Screenshots
 
