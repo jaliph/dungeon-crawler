@@ -23,7 +23,8 @@ A simple roguelike dungeon crawler game written in Rust, using [bracket-lib](htt
 
 ## Screenshots
 
-*WIP*
+![Gameplay 1](screenshots/screenshot1.png)
+![Gameplay 2](screenshots/screenshot2.png)
 
 ## Getting Started
 
