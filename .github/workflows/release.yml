@@ -17,10 +17,6 @@ jobs:
       matrix:
         # You can add more, for any target you'd like!
         include:
-          - build: linux
-            os: ubuntu-latest
-            target: x86_64-unknown-linux-musl
-
           - build: macos-intel
             os: macos-latest
             target: x86_64-apple-darwin
@@ -37,10 +33,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Linux dependencies
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install -y pkg-config libfontconfig1-dev
-
       - name: Get the release version from the tag
         shell: bash
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
@@ -53,18 +45,9 @@ jobs:
           # Make Rust compile to our target (defined in the matrix)
           targets: ${{ matrix.target }}
 
-      - name: Install cross
-        if: matrix.os == 'ubuntu-latest'
-        run: cargo install cross
-
       - name: Build
         run: |
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            cross build --release --target ${{ matrix.target }}
-          else
-            cargo build --release --target ${{ matrix.target }}
-          fi
-        shell: bash
+          cargo build --release --target ${{ matrix.target }}
 
       - name: Build archive
         shell: bash
